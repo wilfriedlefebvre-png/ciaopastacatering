@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+
+body {
+  background-image: url('/restaurant-background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  @apply text-gray-900;
+  min-height: 100vh;
+}
+
+.container { @apply max-w-5xl mx-auto px-4; }
+
+.card { @apply bg-white rounded-2xl shadow p-4; }
+
+.btn { @apply rounded-xl px-4 py-2 font-medium; }
+
+.btn-primary { @apply btn bg-gray-900 text-white hover:opacity-90; }
+
+.btn-ghost { @apply btn bg-gray-100 hover:bg-gray-200; }
+
+.input { @apply w-full rounded-xl border border-gray-300 px-3 py-2; }
+
+.label { @apply text-sm font-medium text-gray-600; }
+
+.badge { @apply inline-block rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-700; }
+
