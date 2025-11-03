@@ -1,18 +1,23 @@
 "use client";
 
 import { MENU } from "@/data/menu";
+import { FAMILY_TO_GO_MENU } from "@/data/familyToGoMenu";
 import { useMemo, useState } from "react";
 import { useCart } from "@/lib/store";
 import type { Category, MenuItem } from "@/lib/types";
 import { SINGLE_CATEGORY_ONLY } from "@/lib/config";
 
-export default function MenuGrid({ category }: { category: Category }) {
+type MenuType = "catering" | "family-to-go";
+
+export default function MenuGrid({ category, menuType = "catering" }: { category: Category; menuType?: MenuType }) {
   const add = useCart(s => s.add);
   const lockedCategory = useCart(s => s.lockedCategory);
 
+  const currentMenu = menuType === "catering" ? MENU : FAMILY_TO_GO_MENU;
+
   const filtered = useMemo(
-    () => MENU.filter(m => m.category === category),
-    [category]
+    () => currentMenu.filter(m => m.category === category),
+    [category, currentMenu]
   );
 
   const locked = SINGLE_CATEGORY_ONLY && lockedCategory && lockedCategory !== category;
