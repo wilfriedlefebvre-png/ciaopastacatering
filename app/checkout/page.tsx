@@ -5,6 +5,7 @@ import { enforceLeadTime } from "@/lib/leadTime";
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 import { addHours, formatISO } from "date-fns";
+import FadeInSection from "@/components/FadeInSection";
 
 export default function CheckoutPage() {
   const { lines, total, clear, gratuity, setGratuity } = useCart();
@@ -70,8 +71,9 @@ export default function CheckoutPage() {
 
   return (
     <div className="grid md:grid-cols-2 gap-6">
-      <div className="card">
-        <h2 className="text-lg font-semibold">Your Details</h2>
+      <FadeInSection delay={0}>
+        <div className="card">
+          <h2 className="text-lg font-semibold">Your Details</h2>
         <div className="mt-3 space-y-3">
           <div>
             <div className="label">Full Name</div>
@@ -102,10 +104,12 @@ export default function CheckoutPage() {
           </div>
           {error && <div className="text-sm text-red-600">{error}</div>}
         </div>
-      </div>
+        </div>
+      </FadeInSection>
 
-      <div className="card">
-        <h2 className="text-lg font-semibold">Review & Pay</h2>
+      <FadeInSection delay={100}>
+        <div className="card">
+          <h2 className="text-lg font-semibold">Review & Pay</h2>
         <div className="mt-3 space-y-2">
           {lines.map(l => (
             <div key={l.item.id} className="flex items-center justify-between">
@@ -174,7 +178,8 @@ export default function CheckoutPage() {
             {processing ? "Processing..." : "Place Order"}
           </button>
         </div>
-      </div>
+        </div>
+      </FadeInSection>
     </div>
   );
 }

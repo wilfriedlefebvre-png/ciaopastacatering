@@ -4,6 +4,7 @@ import { MENU } from "@/data/menu";
 import { FAMILY_TO_GO_MENU } from "@/data/familyToGoMenu";
 import { useMemo, useState } from "react";
 import { useCart } from "@/lib/store";
+import FadeInSection from "@/components/FadeInSection";
 import type { Category, MenuItem } from "@/lib/types";
 import { SINGLE_CATEGORY_ONLY } from "@/lib/config";
 
@@ -24,13 +25,17 @@ export default function MenuGrid({ category, menuType = "catering" }: { category
 
   return (
     <div className="grid sm:grid-cols-2 gap-4">
-      {filtered.map(item => (
-        <MenuItemCard key={item.id} item={item} locked={locked} onAdd={add} />
+      {filtered.map((item, index) => (
+        <FadeInSection key={item.id} delay={index * 50}>
+          <MenuItemCard item={item} locked={locked} onAdd={add} />
+        </FadeInSection>
       ))}
       {locked && (
-        <div className="sm:col-span-2 text-center text-sm text-amber-700">
-          Cart locked to <b>{lockedCategory}</b>. Clear cart to switch categories.
-        </div>
+        <FadeInSection delay={filtered.length * 50}>
+          <div className="sm:col-span-2 text-center text-sm text-amber-700">
+            Cart locked to <b>{lockedCategory}</b>. Clear cart to switch categories.
+          </div>
+        </FadeInSection>
       )}
     </div>
   );
