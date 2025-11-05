@@ -69,6 +69,57 @@ export default function CheckoutPage() {
     { label: "22%", percent: 0.22 }
   ];
 
+  function handleDownload() {
+    const filename = prompt("Please enter a filename for your order (without extension):", `order-${new Date().toISOString().split('T')[0]}`);
+    
+    if (!filename) return; // User cancelled
+    
+    // Format the order data as text
+    const orderData = [
+      "CIAO PASTA CATERING - ORDER SUMMARY",
+      "====================================",
+      "",
+      "Customer Information:",
+      `  Name: ${name || "N/A"}`,
+      `  Email: ${email || "N/A"}`,
+      `  Phone: ${phone || "N/A"}`,
+      `  Order Date/Time: ${when ? new Date(when).toLocaleString() : "N/A"}`,
+      `  Notes: ${notes || "None"}`,
+      "",
+      "Order Items:",
+      "------------",
+      ...lines.map((l, idx) => [
+        `${idx + 1}. ${l.item.name}`,
+        `   Quantity: ${l.qty}`,
+        `   Unit Price: $${l.item.price.toFixed(2)}`,
+        `   Unit: ${l.item.unit || "N/A"}`,
+        `   Subtotal: $${(l.item.price * l.qty).toFixed(2)}`,
+        l.item.description ? `   Description: ${l.item.description}` : "",
+        ""
+      ].filter(Boolean).join("\n")),
+      "",
+      "Pricing Breakdown:",
+      "------------------",
+      `  Subtotal: $${subtotal.toFixed(2)}`,
+      `  Tax (7.75%): $${tax.toFixed(2)}`,
+      `  Gratuity: $${gratuity.toFixed(2)}`,
+      `  Total: $${finalTotal.toFixed(2)}`,
+      "",
+      `Generated: ${new Date().toLocaleString()}`
+    ].join("\n");
+
+    // Create blob and download
+    const blob = new Blob([orderData], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${filename}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="grid md:grid-cols-2 gap-6">
       <FadeInSection delay={0}>
@@ -170,13 +221,22 @@ export default function CheckoutPage() {
             <div className="text-xs text-gray-500 mt-1">Payment collected now (Stripe) or at pickup/delivery (demo).</div>
           </div>
 
-          <button
-            disabled={!ok || processing}
-            onClick={submit}
-            className={`btn-primary mt-3 ${(!ok||processing)?"opacity-50 pointer-events-none":""}`}
-          >
-            {processing ? "Processing..." : "Place Order"}
-          </button>
+          <div className="flex gap-2 mt-3">
+            <button
+              onClick={handleDownload}
+              disabled={lines.length === 0}
+              className={`btn-ghost flex-1 ${lines.length === 0 ? "opacity-50 pointer-events-none" : ""}`}
+            >
+              Download Order
+            </button>
+            <button
+              disabled={!ok || processing}
+              onClick={submit}
+              className={`btn-primary flex-1 ${(!ok||processing)?"opacity-50 pointer-events-none":""}`}
+            >
+              {processing ? "Processing..." : "Place Order"}
+            </button>
+          </div>
         </div>
         </div>
       </FadeInSection>
